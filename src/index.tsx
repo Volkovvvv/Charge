@@ -11,10 +11,10 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<PaymentScreen />} />
       <Route path="/payment/:stationId" element={<PaymentScreen />} />
       <Route path="/success" element={<SuccessScreen />} />
       <Route path="/error" element={<ErrorPage />} />{" "}
+      <Route path="/success/:stationId" element={<SuccessScreen />} />{" "}
       {/* Новый маршрут для ошибки */}
       <Route
         path="*"

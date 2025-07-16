@@ -342,7 +342,7 @@ const PaymentScreen: React.FC = () => {
     }
 
     const paymentRequest = applePayInstance.current.createPaymentRequest({
-      total: { label: "Recharge City", amount: "4.99" },
+      total: { label: "Recharge City", amount: "0.00" },
       requiredBillingContactFields: ["postalAddress", "email"],
     });
 
@@ -415,8 +415,9 @@ const PaymentScreen: React.FC = () => {
         }
       );
 
-      await axios.post(
-        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=10",
+      const payId = await axios.post(
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.99",
+
         {
           paymentToken: paymentToken.data,
           thePlanId: "tss2",
@@ -429,11 +430,16 @@ const PaymentScreen: React.FC = () => {
       await axios.post(
         "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/rent-power-bank",
         {
+          cabinetId: payId.data,
+          connectionKey: "string",
+        },
+        {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
 
       message.success("Платеж прошёл успешно!");
+      navigate("/success/RECH082203000350");
       setShowCardModal(false);
     } catch (err) {
       navigate("/error");
@@ -521,8 +527,8 @@ const PaymentScreen: React.FC = () => {
               marginTop: "25px",
             }}
           >
-            Если батарея не возвращена в течение 14 дней или утеряна, будет
-            взиматься плата в размере $99.
+            If the battery is not returned within 14 days or is lost, a $99 fee
+            will apply.
           </p>
           <p
             style={{
@@ -535,7 +541,7 @@ const PaymentScreen: React.FC = () => {
               marginTop: "25px",
             }}
           >
-            Ничего не произошло? Свяжитесь с поддержкой
+            Nothing happened? Contact support
           </p>
         </main>
       </section>

@@ -1,0 +1,131 @@
+.container {
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  max-width: 300px;
+  gap: 0.125rem;
+  gap: 10px;
+
+  background-color: #fff;
+  font-family: "Inter", sans-serif;
+}
+
+.logo {
+  color: #000;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.logotext {
+  color: rgba(30, 227, 0, 1);
+  font-weight: 900;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  padding: 10px;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 100;
+  color: #000;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.orderInfo {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.orderId {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 5px 0;
+}
+
+.rentalInfo {
+  margin-bottom: 15px;
+}
+
+.rentalInfoItem {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 5px 0;
+}
+
+.instructions {
+  margin-bottom: 15px;
+}
+
+.instructionsTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.instructionsList {
+  list-style: none;
+  padding: 0;
+}
+
+.instructionsItem {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.downloadButton {
+  background: linear-gradient(
+    96.08deg,
+    rgba(153, 248, 141, 0.62) 7.23%,
+    rgba(134, 231, 31, 0.83) 109.83%
+  );
+
+  color: #000;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 20px;
+  font-weight: 400;
+  font-size: 1rem;
+
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.downloadButton:hover {
+  background: linear-gradient(to right, #c1e532, #99c90e);
+}
+
+.supportText {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;
+  margin-top: 10px;
+}
