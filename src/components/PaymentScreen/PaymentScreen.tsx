@@ -373,7 +373,7 @@ const PaymentScreen: React.FC = () => {
         });
 
         await axios.post(
-          "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=100",
+          "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.98",
           {
             paymentToken: nonce,
             thePlanId: "tss2",
@@ -483,7 +483,7 @@ const PaymentScreen: React.FC = () => {
             onClick={() => setShowCardModal(true)}
             disabled={processingPayment}
           >
-            <p>Debit or credit card</p>
+            <p style={{ color: "#000" }}>Debit or credit card</p>
           </button>{" "}
           <BottomSheetModal
             visible={showCardModal}
