@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // Добавляем useNavigate
 import styles from "./SuccessScreen.module.scss";
 import logo from "../../img/logo.png";
 import receipt from "../../img/receipt-item.svg";
@@ -6,15 +7,21 @@ import circle from "../../img/circle.svg";
 import success from "../../img/success_2.svg";
 import return1 from "../../img/return.svg";
 import geo from "../../img/Pin_alt.svg";
-import { useParams } from "react-router-dom";
 
 const SuccessScreen: React.FC = () => {
   const { stationId } = useParams();
+  const navigate = useNavigate(); // Хук для навигации
 
   // Прокрутка к верху страницы при монтировании
   useEffect(() => {
     window.scrollTo(0, 0); // Прокручиваем к началу страницы
-  }, []); // Пустой массив зависимостей — выполняется только при монтировании
+  }, []);
+
+  // Обработчик клика по кнопке "Download App"
+  const handleDownloadClick = () => {
+    window.location.href =
+      "https://apps.apple.com/us/app/recharge-city/id1594160460?l=ru"; // Прямой переход на URL
+  };
 
   return (
     <div className={styles.container}>
@@ -68,7 +75,12 @@ const SuccessScreen: React.FC = () => {
               </li>
             </ul>
           </div>
-          <button className={styles.downloadButton}>Download App</button>
+          <button
+            className={styles.downloadButton}
+            onClick={handleDownloadClick}
+          >
+            Download App
+          </button>
         </div>
         <p className={styles.supportText}>Nothing happened? Contact support</p>
       </main>
