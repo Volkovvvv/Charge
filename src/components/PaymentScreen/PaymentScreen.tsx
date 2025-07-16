@@ -451,8 +451,7 @@ const PaymentScreen: React.FC = () => {
       setShowCardModal(false);
     } catch (err) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      // navigate("/error");
-      navigate(`/success/${stationId}`);
+      navigate("/error");
       message.error("Ошибка оплаты");
     } finally {
       setProcessingPayment(false);
