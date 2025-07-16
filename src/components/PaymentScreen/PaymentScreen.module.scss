@@ -1,10 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 .header {
-  text-align: left;
+  display: flex;
+  align-items: center;
   margin: 0 auto;
   max-width: 300px;
   gap: 0.125rem;
+  gap: 10px;
   padding: 0.625rem;
   background-color: #fff;
   font-family: "Inter", sans-serif;
@@ -17,12 +19,24 @@
   padding: 1.25rem;
   font-family: "Inter", sans-serif;
 }
-
+.oldPrice {
+  font-size: 26px;
+  color: #cecece;
+  text-decoration: line-through;
+}
+.logotext {
+  color: rgba(30, 227, 0, 1);
+  font-weight: 900;
+  font-style: italic;
+}
 .price {
   display: flex;
   gap: 0.9375rem;
   font-size: 2rem;
+  height: 100px;
+
   justify-content: flex-start;
+
   align-items: baseline;
   border-bottom: 0.0625rem solid #a0a0a0;
   font-family: "Inter", sans-serif;
@@ -48,6 +62,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -75,6 +90,36 @@ button {
   cursor: pointer;
 
   transition: background-color 0.3s;
+}
+.openPay {
+  border-top: 1px solid #a0a0a0;
+  border-bottom: 1px solid #a0a0a0;
+  border-left: none;
+  border-right: none;
+  background: none;
+  text-align: left;
+  padding: 20px 40px;
+  position: relative;
+}
+.openPay::before {
+  content: url("../../img/cards.png"); /* вставь путь к иконке */
+  position: absolute;
+  top: 12px;
+  left: 0px;
+  width: 16px;
+  height: 16px;
+  pointer-events: none; /* чтобы иконка не мешала клику */
+  display: block;
+}
+.openPay::after {
+  content: url("../../img/right.png"); /* вставь путь к иконке */
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  pointer-events: none; /* чтобы иконка не мешала клику */
+  display: block;
 }
 
 .payButton:hover {
@@ -115,7 +160,6 @@ button {
   color: #3a3a3a; /* цвет текста */
   border-radius: 12px;
   height: 23px;
-
   padding: 12px;
   margin-bottom: 12px;
   font-size: 30px; /* для уверенности */
@@ -142,8 +186,35 @@ button {
   padding: 12px;
   height: 23px;
 }
+.inputCvv {
+  background-color: white;
+  color: black;
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+  height: 23px;
+}
+.inputCvv::after {
+  content: url("../../img/icon.png"); /* вставь путь к иконке */
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  width: 16px;
+  height: 16px;
+  pointer-events: none; /* чтобы иконка не мешала клику */
+  display: block;
+}
+
 .rowInputs {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
+}
+.inputName {
+  border: none;
+  height: 23px;
+  padding: 12px 0 12px 12px;
+  width: 96%;
+  margin-bottom: 12px;
+  border-radius: 12px;
 }

@@ -428,17 +428,18 @@ const PaymentScreen: React.FC = () => {
         <a href="/">
           <img src={logo} alt="logo" />
         </a>
-        <span>recharge.city</span>
+        <span className={styles.logotext}>recharge.city</span>
       </header>
 
       <main className={styles.main}>
-        <h2>Rent a charger</h2>
+        {" "}
+        <h2 style={{ padding: 0 }}>Rent a Charger</h2>
         <div className={styles.price}>
-          <p>$4.99</p>
+          {" "}
+          <p style={{ fontSize: "38px" }}>$4.99</p>
           <p className={styles.oldPrice}>$15.99</p>
         </div>
-        <p>Select Payment Method</p>
-
+        <p style={{ marginTop: "40px" }}>Select Payment Method</p>
         {/* Apple Pay Button */}
         <button
           className={styles.applePayButton}
@@ -446,20 +447,16 @@ const PaymentScreen: React.FC = () => {
           disabled={!applePayAvailable || processingPayment}
         >
           <img src={apple} alt="Apple Pay" width={20} height={20} />
-          <span>
-            {processingPayment ? "Processing..." : "Pay with Apple Pay"}
-          </span>
+          <span>{processingPayment ? "Processing..." : "Pay"}</span>
         </button>
-
         {/* Manual Card Payment Button */}
         <button
-          className={styles.payButton}
+          className={styles.openPay}
           onClick={() => setShowCardModal(true)}
           disabled={processingPayment}
         >
-          Оплата вручную картой
+          Debit or credit card
         </button>
-
         {/* Modal with Card Fields */}
         <BottomSheetModal
           visible={showCardModal}
@@ -475,10 +472,15 @@ const PaymentScreen: React.FC = () => {
                 Debit or credit card
               </p>
               <div id="card-number" className={styles.input} />
-              <div id="name" className={styles.input} />{" "}
+              <input
+                type="text"
+                id="cardholder-name"
+                placeholder="Name"
+                className={styles.inputName}
+              />
               <div className={styles.rowInputs}>
                 <div id="expiration-date" className={styles.inputHalf} />
-                <div id="cvv" className={styles.inputHalf} />
+                <div id="cvv" className={styles.inputCvv} />
               </div>
             </div>{" "}
             <button
