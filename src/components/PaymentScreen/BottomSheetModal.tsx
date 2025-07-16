@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./PaymentScreen.module.scss";
 
 interface Props {
@@ -10,6 +10,13 @@ interface Props {
 const BottomSheetModal: React.FC<Props> = ({ visible, onClose, children }) => {
   const startY = useRef(0);
   const [dragY, setDragY] = useState(0);
+
+  // Сбрасываем dragY при открытии/закрытии модалки
+  useEffect(() => {
+    if (visible) {
+      setDragY(0); // Сбрасываем dragY при открытии
+    }
+  }, [visible]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     startY.current = e.touches[0].clientY;
@@ -26,9 +33,10 @@ const BottomSheetModal: React.FC<Props> = ({ visible, onClose, children }) => {
 
   const handleTouchEnd = () => {
     if (dragY > 100) {
-      onClose();
+      onClose(); // Закрываем модалку
+      setDragY(0); // Сбрасываем dragY при закрытии
     } else {
-      setDragY(0);
+      setDragY(0); // Возвращаем модалку в исходное положение
     }
   };
 

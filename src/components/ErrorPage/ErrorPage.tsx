@@ -24,21 +24,21 @@ export const ErrorPage: React.FC = () => {
             />
           </svg>
         </div>
-        <h2 className={styles.title}>Ошибка оплаты</h2>
+        <h2 className={styles.title}>Payment error</h2>
         <p className={styles.message}>
-          К сожалению, ваш платеж не прошел. Пожалуйста, проверьте данные карты
-          или выберите другой способ оплаты.
+          Unfortunately, your payment failed. Please check the card details. or
+          choose another payment method.
         </p>
         <button
           className={styles.retryButton}
           onClick={() => navigate("/payment/RECH082203000350")}
         >
-          Попробовать снова
+          Try again
         </button>
         <p className={styles.supportText}>
-          Если проблема сохраняется, свяжитесь с{" "}
+          If the problem persists, please contact{" "}
           <a href="mailto:support@recharge.city" className={styles.supportLink}>
-            поддержкой
+            support
           </a>
           .
         </p>

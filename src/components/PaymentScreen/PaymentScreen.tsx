@@ -200,6 +200,8 @@ import logo from "../../img/logo.png";
 import apple from "../../img/apple.png";
 import BottomSheetModal from "./BottomSheetModal";
 import { useNavigate } from "react-router-dom";
+import cards from "../../img/cards.svg";
+import up from "../../img/up.svg";
 
 const PaymentScreen: React.FC = () => {
   const [clientToken, setClientToken] = useState<string | null>(null);
@@ -480,7 +482,7 @@ const PaymentScreen: React.FC = () => {
             onClick={() => setShowCardModal(true)}
             disabled={processingPayment}
           >
-            Debit or credit card
+            <p>Debit or credit card</p>
           </button>{" "}
           <BottomSheetModal
             visible={showCardModal}
@@ -488,13 +490,26 @@ const PaymentScreen: React.FC = () => {
           >
             <div className="relative">
               <p style={{ textAlign: "center", fontSize: "20px" }}>
-                Введите данные карты
+                Enter your card details
               </p>
+
               <div className={styles.container}>
+                {" "}
                 <div className={styles.containerInputs}>
-                  <p style={{ textAlign: "center", fontSize: "20px" }}>
-                    Дебетовая или кредитная карта
-                  </p>
+                  <div className={styles.debitWrapper}>
+                    {" "}
+                    <img src={cards} alt="" />
+                    <p
+                      style={{
+                        textAlign: "center",
+                        fontSize: "20px",
+                        fontWeight: "900",
+                      }}
+                    >
+                      Debit or credit card
+                    </p>
+                  </div>
+
                   <div id="card-number" className={styles.input} />
                   <input
                     type="text"
@@ -512,7 +527,7 @@ const PaymentScreen: React.FC = () => {
                   onClick={onCardPayClick}
                   disabled={processingPayment}
                 >
-                  Продолжить
+                  Continue
                 </button>
               </div>
             </div>
@@ -532,6 +547,7 @@ const PaymentScreen: React.FC = () => {
             will apply.
           </p>
           <p
+            className={styles.footerText}
             style={{
               fontSize: "7px",
               fontWeight: "300",

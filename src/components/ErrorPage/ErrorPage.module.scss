@@ -31,13 +31,13 @@
 .errorIcon {
   width: 4rem;
   height: 4rem;
-  color: #ef4444;
+  color: rgba(30, 227, 0, 1);
 }
 
 .title {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #ef4444;
+  color: #000;
   margin-bottom: 1rem;
 }
 
@@ -49,7 +49,12 @@
 
 .retryButton {
   position: relative;
-  background: linear-gradient(to right, #3b82f6, #4f46e5);
+  background: linear-gradient(
+    96.08deg,
+    rgba(153, 248, 141, 0.62) 7.23%,
+    rgba(134, 231, 31, 0.83) 109.83%
+  );
+
   color: white;
   padding: 0.75rem 2rem;
   border-radius: 9999px;
@@ -86,7 +91,7 @@
 .supportText {
   margin-top: 1.5rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: rgba(30, 227, 0, 1);
 }
 
 .supportLink {
