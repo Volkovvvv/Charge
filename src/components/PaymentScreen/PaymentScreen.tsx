@@ -458,37 +458,36 @@ const PaymentScreen: React.FC = () => {
   };
 
   return (
-    <Spin spinning={processingPayment}>
-      {" "}
-      <section>
-        <main className={styles.main}>
-          <header className={styles.header}>
-            <a href="/">
-              <img src={logo} alt="logo" />
-            </a>
-            <span className={styles.logotext}>recharge.city</span>
-          </header>
-          <h2 style={{ padding: 0 }}>Rent a Charger</h2>
-          <div className={styles.price}>
-            <p style={{ fontSize: "38px" }}>$4.99</p>
-            <p className={styles.oldPrice}>$15.99</p>
-          </div>
-          <p style={{ marginTop: "40px" }}>Select Payment Method</p>
-          <button
-            className={styles.applePayButton}
-            onClick={onApplePayClick}
-            disabled={!applePayAvailable || processingPayment}
-          >
-            <img src={apple} alt="Apple Pay" width={20} height={20} />
-            <span>{processingPayment ? "Processing..." : "Pay"}</span>
-          </button>
-          <button
-            className={styles.openPay}
-            onClick={() => setShowCardModal(true)}
-            disabled={processingPayment}
-          >
-            <p style={{ color: "#000" }}>Debit or credit card</p>
-          </button>{" "}
+    <section>
+      <main className={styles.main}>
+        <header className={styles.header}>
+          <a href="/">
+            <img src={logo} alt="logo" />
+          </a>
+          <span className={styles.logotext}>recharge.city</span>
+        </header>
+        <h2 style={{ padding: 0 }}>Rent a Charger</h2>
+        <div className={styles.price}>
+          <p style={{ fontSize: "38px" }}>$4.99</p>
+          <p className={styles.oldPrice}>$15.99</p>
+        </div>
+        <p style={{ marginTop: "40px" }}>Select Payment Method</p>
+        <button
+          className={styles.applePayButton}
+          onClick={onApplePayClick}
+          disabled={!applePayAvailable || processingPayment}
+        >
+          <img src={apple} alt="Apple Pay" width={20} height={20} />
+          <span>{processingPayment ? "Processing..." : "Pay"}</span>
+        </button>
+        <button
+          className={styles.openPay}
+          onClick={() => setShowCardModal(true)}
+          disabled={processingPayment}
+        >
+          <p style={{ color: "#000" }}>Debit or credit card</p>
+        </button>{" "}
+        <Spin spinning={processingPayment}>
           <BottomSheetModal
             visible={showCardModal}
             onClose={() => setShowCardModal(false)}
@@ -539,37 +538,37 @@ const PaymentScreen: React.FC = () => {
               </Spin>
             </div>
           </BottomSheetModal>
-          <p
-            style={{
-              fontSize: "10px",
-              fontWeight: "300",
-              color: "#909090",
-              width: "200px",
-              textAlign: "center",
-              margin: "0 auto",
-              marginTop: "25px",
-            }}
-          >
-            If the battery is not returned within 14 days or is lost, a $99 fee
-            will apply.
-          </p>
-          <p
-            className={styles.footerText}
-            style={{
-              fontSize: "7px",
-              fontWeight: "300",
-              color: "#909090",
-              width: "200px",
-              textAlign: "center",
-              margin: "0 auto",
-              marginTop: "25px",
-            }}
-          >
-            Nothing happened? Contact support
-          </p>
-        </main>
-      </section>
-    </Spin>
+        </Spin>
+        <p
+          style={{
+            fontSize: "10px",
+            fontWeight: "300",
+            color: "#909090",
+            width: "200px",
+            textAlign: "center",
+            margin: "0 auto",
+            marginTop: "25px",
+          }}
+        >
+          If the battery is not returned within 14 days or is lost, a $99 fee
+          will apply.
+        </p>
+        <p
+          className={styles.footerText}
+          style={{
+            fontSize: "7px",
+            fontWeight: "300",
+            color: "#909090",
+            width: "200px",
+            textAlign: "center",
+            margin: "0 auto",
+            marginTop: "25px",
+          }}
+        >
+          Nothing happened? Contact support
+        </p>
+      </main>
+    </section>
   );
 };
 
