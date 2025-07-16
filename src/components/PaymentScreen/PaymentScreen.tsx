@@ -415,8 +415,8 @@ const PaymentScreen: React.FC = () => {
         }
       );
 
-      const payId = await axios.post(
-        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.99",
+      await axios.post(
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.98",
 
         {
           paymentToken: paymentToken.data,
@@ -431,7 +431,8 @@ const PaymentScreen: React.FC = () => {
         "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/rent-power-bank",
         {
           cabinetId: "RECH082203000350",
-          connectionKey: "string",
+          connectionKey:
+            "1ae94dc1496c1fee96cb663c79b817294a36d625cef2b64c097c908f2507f259",
         },
         {
           headers: { Authorization: `Bearer ${accessToken}` },
