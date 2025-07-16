@@ -199,7 +199,7 @@ import styles from "./PaymentScreen.module.scss";
 import logo from "../../img/logo.png";
 import apple from "../../img/apple.png";
 import BottomSheetModal from "./BottomSheetModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import cards from "../../img/cards.svg";
 
 const PaymentScreen: React.FC = () => {
@@ -298,7 +298,7 @@ const PaymentScreen: React.FC = () => {
           client: clientInstance,
           styles: {
             input: {
-              "font-size": "14px",
+              "font-size": "16px",
               "font-weight": "300",
               color: "#3a3a3a",
               border: "1px solid black",
