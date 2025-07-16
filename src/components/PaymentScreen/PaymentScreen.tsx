@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom";
+
 import { message } from "antd";
 import axios from "axios";
 import * as braintree from "braintree-web";
