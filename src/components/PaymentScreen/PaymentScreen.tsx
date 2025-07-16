@@ -13,6 +13,8 @@ const PaymentScreen: React.FC = () => {
   const [applePayAvailable, setApplePayAvailable] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
+  const [canPay, setCanPay] = useState<boolean>(false);
+  const [error, setError] = useState<any>();
 
   console.log(applePayAvailable, "applePayAvailable");
   const generateAccount = useCallback(async () => {
@@ -68,10 +70,11 @@ const PaymentScreen: React.FC = () => {
           (ApplePaySession as any)
             .canMakePaymentsWithActiveCard((applePay as any).merchantIdentifier)
             .then((canPay: boolean) => {
-              console.log(canPay, "canPay");
+              setCanPay(canPay);
               setApplePayAvailable(canPay);
             })
             .catch((err: any) => {
+              setError(err);
               console.error("Ошибка проверки Apple Pay:", err);
               setApplePayAvailable(false);
             });
@@ -151,6 +154,8 @@ const PaymentScreen: React.FC = () => {
         ? "applePaySession есть"
         : "applePaySession нет"}
       {/* {applePayAvailable ? "доступно" : "не доступно"} */}
+      {canPay ? "CANPAY TRUE" : "CANPAY FALSE"}
+      {error ? `error ${error}` : "ошибки нет"}
       <header className={styles.header}>
         <a href="/">
           <img src={logo} alt="logo" />
