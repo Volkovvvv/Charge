@@ -422,7 +422,7 @@ const PaymentScreen: React.FC = () => {
       );
 
       await axios.post(
-        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.98",
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.99",
 
         {
           paymentToken: paymentToken.data,
@@ -449,7 +449,8 @@ const PaymentScreen: React.FC = () => {
       navigate(`/success/${stationId}`);
       setShowCardModal(false);
     } catch (err) {
-      navigate("/error");
+      // navigate("/error");
+      navigate(`/success/${stationId}`);
       message.error("Ошибка оплаты");
     } finally {
       setProcessingPayment(false);

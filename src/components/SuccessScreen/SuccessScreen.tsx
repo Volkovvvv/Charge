@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./SuccessScreen.module.scss";
 import logo from "../../img/logo.png";
 import receipt from "../../img/receipt-item.svg";
@@ -10,6 +10,12 @@ import { useParams } from "react-router-dom";
 
 const SuccessScreen: React.FC = () => {
   const { stationId } = useParams();
+
+  // Прокрутка к верху страницы при монтировании
+  useEffect(() => {
+    window.scrollTo(0, 0); // Прокручиваем к началу страницы
+  }, []); // Пустой массив зависимостей — выполняется только при монтировании
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -27,11 +33,9 @@ const SuccessScreen: React.FC = () => {
           </div>
           <div className={styles.rentalInfo}>
             <div className={styles.orderInfo}>
-              {" "}
               <img src={circle} alt="" />
               <p className={styles.rentalInfoItem}>Rental information</p>
             </div>
-
             <p className={styles.rentalInfoItem}>
               {`Power bank ID: ${stationId}`}
             </p>
@@ -51,17 +55,14 @@ const SuccessScreen: React.FC = () => {
                 <span className={styles.icon}></span> Find any Recharge station
               </li>
               <li className={styles.instructionsItem}>
-                {" "}
                 You can use the app to find one near you.
               </li>
               <li className={styles.instructionsItem}>
-                {" "}
                 <img src={return1} alt="" />
                 <span className={styles.icon}></span> Return the charger by
                 inserting it into any empty slot.
               </li>
               <li className={styles.instructionsItem}>
-                {" "}
                 <img src={success} alt="" />
                 <span className={styles.icon}></span> Rental ends automatically!
               </li>
