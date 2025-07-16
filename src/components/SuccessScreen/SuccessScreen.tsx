@@ -10,7 +10,7 @@ import geo from "../../img/Pin_alt.svg";
 
 const SuccessScreen: React.FC = () => {
   const { stationId } = useParams();
-  const navigate = useNavigate(); // Хук для навигации
+  // Хук для навигации
 
   // Прокрутка к верху страницы при монтировании
   useEffect(() => {
