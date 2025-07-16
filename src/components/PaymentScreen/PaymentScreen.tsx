@@ -17,7 +17,9 @@ const PaymentScreen: React.FC = () => {
   console.log(applePayAvailable, "applePayAvailable");
   const generateAccount = useCallback(async () => {
     try {
-      const { data } = await axios.get(".../generate-account");
+      const { data } = await axios.get(
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/auth/apple/generate-account"
+      );
       setAccessToken(data.accessJwt);
       localStorage.setItem("refreshJwt", data.refreshJwt);
       await generateBraintreeClientToken(data.accessJwt);
