@@ -423,7 +423,7 @@ const PaymentScreen: React.FC = () => {
       );
 
       await axios.post(
-        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.98",
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=4.99",
 
         {
           paymentToken: paymentToken.data,
