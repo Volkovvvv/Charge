@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Добавляем useNavigate
+import { useParams } from "react-router-dom"; // Добавляем useNavigate
 import styles from "./SuccessScreen.module.scss";
 import logo from "../../img/logo.png";
 import receipt from "../../img/receipt-item.svg";
