@@ -150,7 +150,7 @@ const PaymentScreen: React.FC = () => {
       {typeof window.ApplePaySession !== "undefined"
         ? "applePaySession есть"
         : "applePaySession нет"}
-      {applePayAvailable ? "доступно" : "не доступно"}
+      {/* {applePayAvailable ? "доступно" : "не доступно"} */}
       <header className={styles.header}>
         <a href="/">
           <img src={logo} alt="logo" />
