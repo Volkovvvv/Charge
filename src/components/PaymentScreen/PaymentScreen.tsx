@@ -191,7 +191,7 @@
 // export default PaymentScreen;
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import axios from "axios";
 import * as braintree from "braintree-web";
 import hostedFields from "braintree-web/hosted-fields";
@@ -199,17 +199,20 @@ import styles from "./PaymentScreen.module.scss";
 import logo from "../../img/logo.png";
 import apple from "../../img/apple.png";
 import BottomSheetModal from "./BottomSheetModal";
+import { useNavigate } from "react-router-dom";
 
 const PaymentScreen: React.FC = () => {
   const [clientToken, setClientToken] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [applePayAvailable, setApplePayAvailable] = useState(false);
-  const [processingPayment, setProcessingPayment] = useState(false);
-  // const [isManualPayModalVisible, setIsManualPayModalVisible] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState<boolean>(false);
   const [showCardModal, setShowCardModal] = useState(false);
+
+  const [paymentSuccess, setPaymentSuccess] = useState<boolean | null>(null);
 
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
   const hostedFieldsInstance = useRef<any | null>(null);
+  const navigate = useNavigate();
 
   const generateAccount = useCallback(async () => {
     try {
@@ -243,12 +246,11 @@ const PaymentScreen: React.FC = () => {
   useEffect(() => {
     generateAccount();
   }, [generateAccount]);
+
   useEffect(() => {
     if (!showCardModal && hostedFieldsInstance.current) {
       hostedFieldsInstance.current.teardown().then(() => {
         hostedFieldsInstance.current = null;
-
-        // Очистка DOM вручную, если нужно:
         ["card-number", "cvv", "expiration-date"].forEach((id) => {
           const el = document.getElementById(id);
           if (el) el.innerHTML = "";
@@ -426,9 +428,20 @@ const PaymentScreen: React.FC = () => {
         }
       );
 
+      setPaymentSuccess(true);
+
+      await axios.post(
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/rent-power-bank",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
       message.success("Платеж прошёл успешно!");
-      setShowCardModal(false); // Закрыть модалку после оплаты
+      setShowCardModal(false);
     } catch (err) {
+      setPaymentSuccess(false);
+      navigate("/error");
       message.error("Ошибка оплаты");
     } finally {
       setProcessingPayment(false);
@@ -436,77 +449,102 @@ const PaymentScreen: React.FC = () => {
   };
 
   return (
-    <section>
-      <header className={styles.header}>
-        <a href="/">
-          <img src={logo} alt="logo" />
-        </a>
-        <span className={styles.logotext}>recharge.city</span>
-      </header>
-
-      <main className={styles.main}>
-        {" "}
-        <h2 style={{ padding: 0 }}>Rent a Charger</h2>
-        <div className={styles.price}>
-          {" "}
-          <p style={{ fontSize: "38px" }}>$4.99</p>
-          <p className={styles.oldPrice}>$15.99</p>
-        </div>
-        <p style={{ marginTop: "40px" }}>Select Payment Method</p>
-        {/* Apple Pay Button */}
-        <button
-          className={styles.applePayButton}
-          onClick={onApplePayClick}
-          disabled={!applePayAvailable || processingPayment}
-        >
-          <img src={apple} alt="Apple Pay" width={20} height={20} />
-          <span>{processingPayment ? "Processing..." : "Pay"}</span>
-        </button>
-        {/* Manual Card Payment Button */}
-        <button
-          className={styles.openPay}
-          onClick={() => setShowCardModal(true)}
-          disabled={processingPayment}
-        >
-          Debit or credit card
-        </button>
-        {/* Modal with Card Fields */}
-        <BottomSheetModal
-          visible={showCardModal}
-          onClose={() => setShowCardModal(false)}
-        >
-          {" "}
-          <p style={{ textAlign: "center", fontSize: "20px" }}>
-            Enter your card details
-          </p>
-          <div className={styles.container}>
-            <div className={styles.containerInputs}>
-              <p style={{ textAlign: "center", fontSize: "20px" }}>
-                Debit or credit card
-              </p>
-              <div id="card-number" className={styles.input} />
-              <input
-                type="text"
-                id="cardholder-name"
-                placeholder="Name"
-                className={styles.inputName}
-              />
-              <div className={styles.rowInputs}>
-                <div id="expiration-date" className={styles.inputHalf} />
-                <div id="cvv" className={styles.inputCvv} />
-              </div>
-            </div>{" "}
-            <button
-              className={styles.payButton}
-              onClick={onCardPayClick}
-              disabled={processingPayment}
-            >
-              Continue
-            </button>
+    <Spin spinning={processingPayment}>
+      {" "}
+      <section>
+        <main className={styles.main}>
+          <header className={styles.header}>
+            <a href="/">
+              <img src={logo} alt="logo" />
+            </a>
+            <span className={styles.logotext}>recharge.city</span>
+          </header>
+          <h2 style={{ padding: 0 }}>Rent a Charger</h2>
+          <div className={styles.price}>
+            <p style={{ fontSize: "38px" }}>$4.99</p>
+            <p className={styles.oldPrice}>$15.99</p>
           </div>
-        </BottomSheetModal>
-      </main>
-    </section>
+          <p style={{ marginTop: "40px" }}>Select Payment Method</p>
+          <button
+            className={styles.applePayButton}
+            onClick={onApplePayClick}
+            disabled={!applePayAvailable || processingPayment}
+          >
+            <img src={apple} alt="Apple Pay" width={20} height={20} />
+            <span>{processingPayment ? "Processing..." : "Pay"}</span>
+          </button>
+          <button
+            className={styles.openPay}
+            onClick={() => setShowCardModal(true)}
+            disabled={processingPayment}
+          >
+            Debit or credit card
+          </button>{" "}
+          <BottomSheetModal
+            visible={showCardModal}
+            onClose={() => setShowCardModal(false)}
+          >
+            <div className="relative">
+              <p style={{ textAlign: "center", fontSize: "20px" }}>
+                Введите данные карты
+              </p>
+              <div className={styles.container}>
+                <div className={styles.containerInputs}>
+                  <p style={{ textAlign: "center", fontSize: "20px" }}>
+                    Дебетовая или кредитная карта
+                  </p>
+                  <div id="card-number" className={styles.input} />
+                  <input
+                    type="text"
+                    id="cardholder-name"
+                    placeholder="Имя"
+                    className={styles.inputName}
+                  />
+                  <div className={styles.rowInputs}>
+                    <div id="expiration-date" className={styles.inputHalf} />
+                    <div id="cvv" className={styles.inputCvv} />
+                  </div>
+                </div>
+                <button
+                  className={styles.payButton}
+                  onClick={onCardPayClick}
+                  disabled={processingPayment}
+                >
+                  Продолжить
+                </button>
+              </div>
+            </div>
+          </BottomSheetModal>
+          <p
+            style={{
+              fontSize: "10px",
+              fontWeight: "300",
+              color: "#909090",
+              width: "200px",
+              textAlign: "center",
+              margin: "0 auto",
+              marginTop: "25px",
+            }}
+          >
+            Если батарея не возвращена в течение 14 дней или утеряна, будет
+            взиматься плата в размере $99.
+          </p>
+          <p
+            style={{
+              fontSize: "7px",
+              fontWeight: "300",
+              color: "#909090",
+              width: "200px",
+              textAlign: "center",
+              margin: "0 auto",
+              marginTop: "25px",
+            }}
+          >
+            Ничего не произошло? Свяжитесь с поддержкой
+          </p>
+        </main>
+      </section>
+    </Spin>
   );
 };
 
