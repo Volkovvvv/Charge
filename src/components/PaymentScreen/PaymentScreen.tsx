@@ -423,7 +423,7 @@ const PaymentScreen: React.FC = () => {
       );
 
       await axios.post(
-        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.99",
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.98",
 
         {
           paymentToken: paymentToken.data,
@@ -521,7 +521,7 @@ const PaymentScreen: React.FC = () => {
                     <input
                       type="text"
                       id="cardholder-name"
-                      placeholder="Имя"
+                      placeholder="Name"
                       className={styles.inputName}
                     />
                     <div className={styles.rowInputs}>
