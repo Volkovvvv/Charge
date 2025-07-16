@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { message } from "antd";
 import axios from "axios";
@@ -8,7 +8,6 @@ import logo from "../../img/logo.png";
 import apple from "../../img/apple.png";
 
 const PaymentScreen: React.FC = () => {
-  const { stationId } = useParams<{ stationId: string }>();
   const [clientToken, setClientToken] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [applePayAvailable, setApplePayAvailable] = useState(false);
@@ -16,11 +15,9 @@ const PaymentScreen: React.FC = () => {
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
 
   console.log(applePayAvailable, "applePayAvailable");
-  const generateAccount = async () => {
+  const generateAccount = useCallback(async () => {
     try {
-      const { data } = await axios.get(
-        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/auth/apple/generate-account"
-      );
+      const { data } = await axios.get(".../generate-account");
       setAccessToken(data.accessJwt);
       localStorage.setItem("refreshJwt", data.refreshJwt);
       await generateBraintreeClientToken(data.accessJwt);
@@ -28,7 +25,7 @@ const PaymentScreen: React.FC = () => {
       console.error("Ошибка генерации аккаунта:", err);
       message.error("Не удалось создать аккаунт");
     }
-  };
+  }, []);
 
   const generateBraintreeClientToken = async (token: string) => {
     try {
@@ -48,7 +45,7 @@ const PaymentScreen: React.FC = () => {
 
   useEffect(() => {
     generateAccount();
-  }, []);
+  }, [generateAccount]);
 
   useEffect(() => {
     if (!clientToken) return;
