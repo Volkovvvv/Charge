@@ -457,7 +457,7 @@ const PaymentScreen: React.FC = () => {
   };
 
   return (
-    <Spin spinning={processingPayment} wrapperClassName={styles.spinnerWrapper}>
+    <Spin spinning={processingPayment}>
       {" "}
       <section>
         <main className={styles.main}>
