@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+.header {
+  text-align: left;
+  margin: 0 auto;
+  max-width: 300px;
+  gap: 0.125rem;
+  padding: 0.625rem;
+  background-color: #fff;
+  font-family: "Inter", sans-serif;
+}
+
+.main {
+  text-align: left;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 1.25rem;
+  font-family: "Inter", sans-serif;
+}
+
+.price {
+  display: flex;
+  gap: 0.9375rem;
+  font-size: 2rem;
+  justify-content: flex-start;
+  align-items: baseline;
+  border-bottom: 0.0625rem solid #a0a0a0;
+  font-family: "Inter", sans-serif;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 0.625rem 0;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+}
+
+/* Стили для кнопки Apple Pay */
+.applePayButton {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  padding: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.applePayButton:hover {
+  background-color: #222;
+}
+.payButton {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 15px;
+  padding: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid gray;
+  transition: background-color 0.3s;
+}
+
+.payButton:hover {
+}
