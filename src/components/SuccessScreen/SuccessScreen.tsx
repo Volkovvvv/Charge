@@ -6,8 +6,10 @@ import circle from "../../img/circle.svg";
 import success from "../../img/success_2.svg";
 import return1 from "../../img/return.svg";
 import geo from "../../img/Pin_alt.svg";
+import { useParams } from "react-router-dom";
 
 const SuccessScreen: React.FC = () => {
+  const { stationId } = useParams();
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -31,7 +33,7 @@ const SuccessScreen: React.FC = () => {
             </div>
 
             <p className={styles.rentalInfoItem}>
-              Power bank ID: RECHRL3H3100248
+              {`Power bank ID: ${stationId}`}
             </p>
             <p className={styles.rentalInfoItem}>
               Started at: 02/11/2024 01:13:55

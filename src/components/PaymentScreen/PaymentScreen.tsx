@@ -213,6 +213,8 @@ const PaymentScreen: React.FC = () => {
   const hostedFieldsInstance = useRef<any | null>(null);
   const navigate = useNavigate();
 
+  const { stationId } = useParams();
+
   const generateAccount = useCallback(async () => {
     try {
       const { data } = await axios.get(
@@ -431,7 +433,7 @@ const PaymentScreen: React.FC = () => {
       await axios.post(
         "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/rent-power-bank",
         {
-          cabinetId: "RECH082203000350",
+          cabinetId: stationId,
           connectionKey:
             "1ae94dc1496c1fee96cb663c79b817294a36d625cef2b64c097c908f2507f259",
         },
@@ -441,7 +443,7 @@ const PaymentScreen: React.FC = () => {
       );
 
       message.success("Платеж прошёл успешно!");
-      navigate("/success/RECH082203000350");
+      navigate(`/success/${stationId}`);
       setShowCardModal(false);
     } catch (err) {
       navigate("/error");
