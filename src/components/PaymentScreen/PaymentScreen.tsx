@@ -201,7 +201,6 @@ import apple from "../../img/apple.png";
 import BottomSheetModal from "./BottomSheetModal";
 import { useNavigate } from "react-router-dom";
 import cards from "../../img/cards.svg";
-import up from "../../img/up.svg";
 
 const PaymentScreen: React.FC = () => {
   const [clientToken, setClientToken] = useState<string | null>(null);
