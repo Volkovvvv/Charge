@@ -208,8 +208,6 @@ const PaymentScreen: React.FC = () => {
   const [processingPayment, setProcessingPayment] = useState<boolean>(false);
   const [showCardModal, setShowCardModal] = useState(false);
 
-  const [paymentSuccess, setPaymentSuccess] = useState<boolean | null>(null);
-
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
   const hostedFieldsInstance = useRef<any | null>(null);
   const navigate = useNavigate();
@@ -428,8 +426,6 @@ const PaymentScreen: React.FC = () => {
         }
       );
 
-      setPaymentSuccess(true);
-
       await axios.post(
         "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/rent-power-bank",
         {
@@ -440,7 +436,6 @@ const PaymentScreen: React.FC = () => {
       message.success("Платеж прошёл успешно!");
       setShowCardModal(false);
     } catch (err) {
-      setPaymentSuccess(false);
       navigate("/error");
       message.error("Ошибка оплаты");
     } finally {
