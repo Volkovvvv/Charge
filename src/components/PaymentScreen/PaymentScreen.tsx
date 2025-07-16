@@ -430,7 +430,7 @@ const PaymentScreen: React.FC = () => {
       await axios.post(
         "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/rent-power-bank",
         {
-          cabinetId: payId.data,
+          cabinetId: "RECH082203000350",
           connectionKey: "string",
         },
         {
