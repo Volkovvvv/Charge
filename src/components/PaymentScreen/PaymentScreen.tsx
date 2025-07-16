@@ -208,6 +208,7 @@ const PaymentScreen: React.FC = () => {
   const [applePayAvailable, setApplePayAvailable] = useState(false);
   const [processingPayment, setProcessingPayment] = useState<boolean>(false);
   const [showCardModal, setShowCardModal] = useState(false);
+  const [isFieldsLoading, setIsFieldsLoading] = useState(false);
 
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
   const hostedFieldsInstance = useRef<any | null>(null);
@@ -289,7 +290,7 @@ const PaymentScreen: React.FC = () => {
 
   useEffect(() => {
     if (!showCardModal || !clientToken || hostedFieldsInstance.current) return;
-
+    setIsFieldsLoading(true);
     let clientInstance: any;
 
     braintree.client
@@ -333,9 +334,11 @@ const PaymentScreen: React.FC = () => {
       })
       .then((hostedFields) => {
         hostedFieldsInstance.current = hostedFields;
+        setIsFieldsLoading(false);
       })
       .catch((err) => {
         console.error("Ошибка инициализации Hosted Fields:", err);
+        setIsFieldsLoading(false);
       });
   }, [showCardModal, clientToken]);
 
@@ -454,7 +457,7 @@ const PaymentScreen: React.FC = () => {
   };
 
   return (
-    <Spin spinning={processingPayment}>
+    <Spin spinning={processingPayment} wrapperClassName={styles.spinnerWrapper}>
       {" "}
       <section>
         <main className={styles.main}>
@@ -493,44 +496,46 @@ const PaymentScreen: React.FC = () => {
               <p style={{ textAlign: "center", fontSize: "20px" }}>
                 Enter your card details
               </p>
-
-              <div className={styles.container}>
+              <Spin spinning={isFieldsLoading}>
                 {" "}
-                <div className={styles.containerInputs}>
-                  <div className={styles.debitWrapper}>
-                    {" "}
-                    <img src={cards} alt="" />
-                    <p
-                      style={{
-                        textAlign: "center",
-                        fontSize: "20px",
-                        fontWeight: "900",
-                      }}
-                    >
-                      Debit or credit card
-                    </p>
-                  </div>
+                <div className={styles.container}>
+                  {" "}
+                  <div className={styles.containerInputs}>
+                    <div className={styles.debitWrapper}>
+                      {" "}
+                      <img src={cards} alt="" />
+                      <p
+                        style={{
+                          textAlign: "center",
+                          fontSize: "20px",
+                          fontWeight: "900",
+                        }}
+                      >
+                        Debit or credit card
+                      </p>
+                    </div>
 
-                  <div id="card-number" className={styles.input} />
-                  <input
-                    type="text"
-                    id="cardholder-name"
-                    placeholder="Имя"
-                    className={styles.inputName}
-                  />
-                  <div className={styles.rowInputs}>
-                    <div id="expiration-date" className={styles.inputHalf} />
-                    <div id="cvv" className={styles.inputCvv} />
+                    <div id="card-number" className={styles.input} />
+                    <input
+                      type="text"
+                      id="cardholder-name"
+                      placeholder="Имя"
+                      className={styles.inputName}
+                    />
+                    <div className={styles.rowInputs}>
+                      <div id="expiration-date" className={styles.inputHalf} />
+                      <div id="cvv" className={styles.inputCvv} />
+                    </div>
                   </div>
+                  <button
+                    className={styles.payButton}
+                    onClick={onCardPayClick}
+                    disabled={processingPayment}
+                  >
+                    Continue
+                  </button>
                 </div>
-                <button
-                  className={styles.payButton}
-                  onClick={onCardPayClick}
-                  disabled={processingPayment}
-                >
-                  Continue
-                </button>
-              </div>
+              </Spin>
             </div>
           </BottomSheetModal>
           <p

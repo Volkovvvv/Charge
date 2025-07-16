@@ -238,3 +238,16 @@ button {
   gap: 15px;
   justify-content: center;
 }
+.spinnerWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Центрирует спиннер по вертикали на весь экран */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  z-index: 1000;
+}
