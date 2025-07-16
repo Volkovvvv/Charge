@@ -191,7 +191,7 @@
 // export default PaymentScreen;
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { message, Modal } from "antd";
+import { message } from "antd";
 import axios from "axios";
 import * as braintree from "braintree-web";
 import hostedFields from "braintree-web/hosted-fields";
@@ -207,8 +207,6 @@ const PaymentScreen: React.FC = () => {
   const [processingPayment, setProcessingPayment] = useState(false);
   // const [isManualPayModalVisible, setIsManualPayModalVisible] = useState(false);
   const [showCardModal, setShowCardModal] = useState(false);
-  const [canPay, setCanPay] = useState<boolean>(false);
-  const [error, setError] = useState<any>(null);
 
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
   const hostedFieldsInstance = useRef<any | null>(null);
@@ -260,11 +258,9 @@ const PaymentScreen: React.FC = () => {
           (ApplePaySession as any)
             .canMakePaymentsWithActiveCard((applePay as any).merchantIdentifier)
             .then((canPay: boolean) => {
-              setCanPay(canPay);
               setApplePayAvailable(canPay);
             })
             .catch((err: any) => {
-              setError(err);
               setApplePayAvailable(false);
             });
         }
