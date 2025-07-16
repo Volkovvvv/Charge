@@ -270,6 +270,20 @@ const PaymentScreen: React.FC = () => {
         setApplePayAvailable(false);
       });
   }, [clientToken]);
+  useEffect(() => {
+    if (!showCardModal && hostedFieldsInstance.current) {
+      hostedFieldsInstance.current.teardown().then(() => {
+        hostedFieldsInstance.current = null;
+        // Можно очистить DOM элементы вручную, если надо
+        const number = document.getElementById("card-number");
+        const cvv = document.getElementById("cvv");
+        const expiration = document.getElementById("expiration-date");
+        if (number) number.innerHTML = "";
+        if (cvv) cvv.innerHTML = "";
+        if (expiration) expiration.innerHTML = "";
+      });
+    }
+  }, [showCardModal]);
 
   useEffect(() => {
     if (!showCardModal || !clientToken || hostedFieldsInstance.current) return;
