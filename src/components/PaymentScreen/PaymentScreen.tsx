@@ -59,15 +59,25 @@ const PaymentScreen: React.FC = () => {
       )
       .then((applePay) => {
         applePayInstance.current = applePay;
-
+        console.log(applePay, "applePay");
+        console.log(
+          "➡ merchantIdentifier:",
+          (applePay as any).merchantIdentifier
+        );
         if (typeof window.ApplePaySession !== "undefined") {
           (ApplePaySession as any)
             .canMakePaymentsWithActiveCard((applePay as any).merchantIdentifier)
-            .then((canPay: boolean) => setApplePayAvailable(canPay))
+            .then((canPay: boolean) => {
+              console.log(canPay, "canPay");
+              setApplePayAvailable(canPay);
+            })
             .catch((err: any) => {
               console.error("Ошибка проверки Apple Pay:", err);
               setApplePayAvailable(false);
             });
+          console.log("не андефайнед");
+        } else {
+          console.log("undefined");
         }
       })
       .catch((err) => {
@@ -137,6 +147,9 @@ const PaymentScreen: React.FC = () => {
 
   return (
     <section>
+      {typeof window.ApplePaySession !== "undefined"
+        ? "applePaySession есть"
+        : "applePaySession нет"}
       {applePayAvailable ? "доступно" : "не доступно"}
       <header className={styles.header}>
         <a href="/">
