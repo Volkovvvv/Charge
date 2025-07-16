@@ -56,19 +56,94 @@ button {
   background-color: #222;
 }
 .payButton {
-  background-color: #fff;
+  background: linear-gradient(
+    96.08deg,
+    rgba(153, 248, 141, 0.62) 7.23%,
+    rgba(134, 231, 31, 0.83) 109.83%
+  );
+  width: 90%;
+  margin: 0 auto;
   color: #000;
   border: none;
+  border: none;
   border-radius: 15px;
-  padding: 12px;
-  font-weight: 500;
+  padding: 15px;
+  font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 1px solid gray;
+
   transition: background-color 0.3s;
 }
 
 .payButton:hover {
+}
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  touch-action: none;
+}
+
+.modalContent {
+  background: #fff;
+  width: 100%;
+  max-width: 600px;
+  border-top-left-radius: 16px;
+  height: 400px;
+  border-top-right-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  touch-action: pan-y;
+}
+
+.dragHandle {
+  width: 80px;
+  height: 6px;
+  background: #ccc;
+  border-radius: 3px;
+  margin: 0 auto 10px auto;
+}
+.input {
+  background-color: white; /* обязательно белый фон для поля */
+  color: #3a3a3a; /* цвет текста */
+  border-radius: 12px;
+  height: 23px;
+
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 30px; /* для уверенности */
+}
+.container {
+  padding: 2px 0;
+  border-radius: 16px;
+  margin: 0 auto;
+  height: 320px;
+  width: 60%;
+  background-color: #f5f5f5;
+  /* или max-width, если нужно */
+}
+.containerInputs {
+  margin: 0 auto;
+  width: 90%;
+  background-color: transparent;
+  /* или max-width, если нужно */
+}
+.inputHalf {
+  background-color: white;
+  color: black;
+  border-radius: 12px;
+  padding: 12px;
+  height: 23px;
+}
+.rowInputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
 }

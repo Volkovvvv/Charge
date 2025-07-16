@@ -191,30 +191,28 @@
 // export default PaymentScreen;
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { message } from "antd";
+import { message, Modal } from "antd";
 import axios from "axios";
 import * as braintree from "braintree-web";
+import hostedFields from "braintree-web/hosted-fields";
 import styles from "./PaymentScreen.module.scss";
 import logo from "../../img/logo.png";
 import apple from "../../img/apple.png";
-import hostedFields from "braintree-web/hosted-fields";
+import BottomSheetModal from "./BottomSheetModal";
 
 const PaymentScreen: React.FC = () => {
   const [clientToken, setClientToken] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [applePayAvailable, setApplePayAvailable] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
-  const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
+  // const [isManualPayModalVisible, setIsManualPayModalVisible] = useState(false);
+  const [showCardModal, setShowCardModal] = useState(false);
   const [canPay, setCanPay] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
 
-  // Для Hosted Fields (оплата картой)
+  const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
   const hostedFieldsInstance = useRef<any | null>(null);
 
-  // Логируем состояние applePayAvailable
-  console.log(applePayAvailable, "applePayAvailable");
-
-  // Генерация аккаунта и получение access token
   const generateAccount = useCallback(async () => {
     try {
       const { data } = await axios.get(
@@ -229,7 +227,6 @@ const PaymentScreen: React.FC = () => {
     }
   }, []);
 
-  // Получение client token для Braintree
   const generateBraintreeClientToken = async (token: string) => {
     try {
       const { data } = await axios.get(
@@ -238,7 +235,6 @@ const PaymentScreen: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       setClientToken(data);
     } catch (err) {
       console.error("Ошибка получения client token:", err);
@@ -246,12 +242,10 @@ const PaymentScreen: React.FC = () => {
     }
   };
 
-  // Инициализация при загрузке компонента
   useEffect(() => {
     generateAccount();
   }, [generateAccount]);
 
-  // Инициализация Apple Pay после получения clientToken
   useEffect(() => {
     if (!clientToken) return;
 
@@ -262,11 +256,6 @@ const PaymentScreen: React.FC = () => {
       )
       .then((applePay) => {
         applePayInstance.current = applePay;
-        console.log(applePay, "applePay");
-        console.log(
-          "➡ merchantIdentifier:",
-          (applePay as any).merchantIdentifier
-        );
         if (typeof window.ApplePaySession !== "undefined") {
           (ApplePaySession as any)
             .canMakePaymentsWithActiveCard((applePay as any).merchantIdentifier)
@@ -276,12 +265,8 @@ const PaymentScreen: React.FC = () => {
             })
             .catch((err: any) => {
               setError(err);
-              console.error("Ошибка проверки Apple Pay:", err);
               setApplePayAvailable(false);
             });
-          console.log("не андефайнед");
-        } else {
-          console.log("undefined");
         }
       })
       .catch((err) => {
@@ -290,9 +275,8 @@ const PaymentScreen: React.FC = () => {
       });
   }, [clientToken]);
 
-  // Инициализация Hosted Fields (оплата картой) после получения clientToken
   useEffect(() => {
-    if (!clientToken) return;
+    if (!showCardModal || !clientToken || hostedFieldsInstance.current) return;
 
     let clientInstance: any;
 
@@ -304,8 +288,10 @@ const PaymentScreen: React.FC = () => {
           client: clientInstance,
           styles: {
             input: {
-              "font-size": "16px",
+              "font-size": "14px",
+              "font-weight": "300",
               color: "#3a3a3a",
+              border: "1px solid black",
             },
             ":focus": {
               color: "black",
@@ -320,15 +306,15 @@ const PaymentScreen: React.FC = () => {
           fields: {
             number: {
               selector: "#card-number",
-              placeholder: "4111 1111 1111 1111",
+              placeholder: "Card number",
             },
             cvv: {
               selector: "#cvv",
-              placeholder: "123",
+              placeholder: "CVV",
             },
             expirationDate: {
               selector: "#expiration-date",
-              placeholder: "MM/YY",
+              placeholder: "Month/Year",
             },
           },
         });
@@ -339,9 +325,8 @@ const PaymentScreen: React.FC = () => {
       .catch((err) => {
         console.error("Ошибка инициализации Hosted Fields:", err);
       });
-  }, [clientToken]);
+  }, [showCardModal, clientToken]);
 
-  // Обработчик клика по Apple Pay кнопке
   const onApplePayClick = () => {
     if (!applePayInstance.current || !accessToken) {
       return message.error("Apple Pay не готов к использованию");
@@ -363,7 +348,6 @@ const PaymentScreen: React.FC = () => {
           });
         session.completeMerchantValidation(merchantSession);
       } catch (err) {
-        console.error("Ошибка валидации Apple Pay мерчанта:", err);
         session.abort();
       }
     };
@@ -377,9 +361,9 @@ const PaymentScreen: React.FC = () => {
         });
 
         await axios.post(
-          "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=10",
+          "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=100",
           {
-            paymentToken: clientToken,
+            paymentToken: nonce,
             thePlanId: "tss2",
           },
           {
@@ -390,7 +374,6 @@ const PaymentScreen: React.FC = () => {
         session.completePayment(ApplePaySession.STATUS_SUCCESS);
         message.success("Платеж прошёл успешно!");
       } catch (err) {
-        console.error("Ошибка во время оплаты:", err);
         session.completePayment(ApplePaySession.STATUS_FAILURE);
         message.error("Ошибка оплаты");
       } finally {
@@ -401,7 +384,6 @@ const PaymentScreen: React.FC = () => {
     session.begin();
   };
 
-  // Обработчик оплаты картой через Hosted Fields
   const onCardPayClick = async () => {
     if (!hostedFieldsInstance.current || !accessToken) {
       return message.error("Платежная форма не готова");
@@ -410,9 +392,7 @@ const PaymentScreen: React.FC = () => {
     setProcessingPayment(true);
 
     try {
-      console.log("нажал");
       const payload = await hostedFieldsInstance.current.tokenize();
-      // payload.nonce — это токенизированная карта
 
       const paymentToken = await axios.post(
         "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/add-payment-method",
@@ -438,8 +418,8 @@ const PaymentScreen: React.FC = () => {
       );
 
       message.success("Платеж прошёл успешно!");
+      setShowCardModal(false); // Закрыть модалку после оплаты
     } catch (err) {
-      console.error("Ошибка при оплате картой:", err);
       message.error("Ошибка оплаты");
     } finally {
       setProcessingPayment(false);
@@ -448,12 +428,6 @@ const PaymentScreen: React.FC = () => {
 
   return (
     <section>
-      {typeof window.ApplePaySession !== "undefined"
-        ? "applePaySession есть"
-        : "applePaySession нет"}
-      {canPay ? "CANPAY TRUE" : "CANPAY FALSE"}
-      {error ? `error ${error}` : "ошибки нет"}
-
       <header className={styles.header}>
         <a href="/">
           <img src={logo} alt="logo" />
@@ -469,7 +443,7 @@ const PaymentScreen: React.FC = () => {
         </div>
         <p>Select Payment Method</p>
 
-        {/* Кнопка Apple Pay */}
+        {/* Apple Pay Button */}
         <button
           className={styles.applePayButton}
           onClick={onApplePayClick}
@@ -481,64 +455,45 @@ const PaymentScreen: React.FC = () => {
           </span>
         </button>
 
-        {/* Оплата картой через Hosted Fields */}
-        <h3>Оплата картой</h3>
-        <div
-          id="card-form"
-          style={{
-            maxWidth: 400,
-            marginBottom: 20,
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-          }}
-        >
-          <label htmlFor="card-number">Номер карты</label>
-          <div
-            id="card-number"
-            style={{
-              height: "40px",
-              border: "1px solid #ccc",
-              padding: "8px",
-              borderRadius: "4px",
-            }}
-          ></div>
-
-          <label htmlFor="expiration-date">Срок действия</label>
-          <div
-            id="expiration-date"
-            style={{
-              height: "40px",
-              border: "1px solid #ccc",
-              padding: "8px",
-              borderRadius: "4px",
-            }}
-          ></div>
-
-          <label htmlFor="cvv">CVV</label>
-          <div
-            id="cvv"
-            style={{
-              height: "40px",
-              border: "1px solid #ccc",
-              padding: "8px",
-              borderRadius: "4px",
-            }}
-          ></div>
-        </div>
-
+        {/* Manual Card Payment Button */}
         <button
           className={styles.payButton}
-          onClick={onCardPayClick}
+          onClick={() => setShowCardModal(true)}
           disabled={processingPayment}
         >
-          {processingPayment ? "Обработка..." : "Оплатить картой"}
+          Оплата вручную картой
         </button>
 
-        {/* Заглушка кнопки дебетовой/кредитной карты (если нужна) */}
-        <button className={styles.payButton} disabled>
-          Debit or credit card (Coming Soon)
-        </button>
+        {/* Modal with Card Fields */}
+        <BottomSheetModal
+          visible={showCardModal}
+          onClose={() => setShowCardModal(false)}
+        >
+          {" "}
+          <p style={{ textAlign: "center", fontSize: "20px" }}>
+            Enter your card details
+          </p>
+          <div className={styles.container}>
+            <div className={styles.containerInputs}>
+              <p style={{ textAlign: "center", fontSize: "20px" }}>
+                Debit or credit card
+              </p>
+              <div id="card-number" className={styles.input} />
+              <div id="name" className={styles.input} />{" "}
+              <div className={styles.rowInputs}>
+                <div id="expiration-date" className={styles.inputHalf} />
+                <div id="cvv" className={styles.inputHalf} />
+              </div>
+            </div>{" "}
+            <button
+              className={styles.payButton}
+              onClick={onCardPayClick}
+              disabled={processingPayment}
+            >
+              Continue
+            </button>
+          </div>
+        </BottomSheetModal>
       </main>
     </section>
   );
