@@ -209,6 +209,10 @@ const PaymentScreen: React.FC = () => {
   const [processingPayment, setProcessingPayment] = useState<boolean>(false);
   const [showCardModal, setShowCardModal] = useState(false);
   const [isFieldsLoading, setIsFieldsLoading] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
+  const addLog = (msg: string) => {
+    setLogs((prev) => [...prev, msg]);
+  };
 
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
   const hostedFieldsInstance = useRef<any | null>(null);
@@ -344,39 +348,47 @@ const PaymentScreen: React.FC = () => {
 
   const onApplePayClick = () => {
     if (!applePayInstance.current || !accessToken) {
+      addLog("Apple Pay не готов к использованию");
       return message.error("Apple Pay не готов к использованию");
     }
 
+    addLog("Инициализация платежа через Apple Pay...");
+
     const paymentRequest = applePayInstance.current.createPaymentRequest({
-      total: { label: "Recharge City", amount: "0.05" },
+      total: { label: "Recharge City", amount: "4.99" },
       requiredBillingContactFields: ["postalAddress", "email"],
     });
 
     const session = new ApplePaySession(3, paymentRequest);
 
     session.onvalidatemerchant = async (event) => {
+      addLog("Валидация мерчанта...");
       try {
         const merchantSession =
           await applePayInstance.current!.performValidation({
             validationURL: event.validationURL,
             displayName: "Recharge City",
           });
+        addLog("Валидация мерчанта успешна");
         session.completeMerchantValidation(merchantSession);
       } catch (err) {
+        addLog("Ошибка валидации мерчанта: " + (err as any).message);
         session.abort();
       }
     };
 
     session.onpaymentauthorized = async (event) => {
+      addLog("Авторизация платежа...");
       try {
         setProcessingPayment(true);
 
         const { nonce } = await applePayInstance.current!.tokenize({
           token: event.payment.token,
         });
+        addLog("Токен платежа получен: " + nonce);
 
         await axios.post(
-          "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.98",
+          "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=10",
           {
             paymentToken: nonce,
             thePlanId: "tss2",
@@ -386,9 +398,11 @@ const PaymentScreen: React.FC = () => {
           }
         );
 
+        addLog("Платеж успешно проведён");
         session.completePayment(ApplePaySession.STATUS_SUCCESS);
         message.success("Платеж прошёл успешно!");
       } catch (err) {
+        addLog("Ошибка оплаты: " + (err as any).message);
         session.completePayment(ApplePaySession.STATUS_FAILURE);
         message.error("Ошибка оплаты");
       } finally {
@@ -423,7 +437,7 @@ const PaymentScreen: React.FC = () => {
       );
 
       await axios.post(
-        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=14.98",
+        "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=10",
 
         {
           paymentToken: paymentToken.data,
@@ -461,6 +475,24 @@ const PaymentScreen: React.FC = () => {
   return (
     <Spin spinning={processingPayment}>
       {" "}
+      <div
+        style={{
+          maxHeight: 200,
+          overflowY: "auto",
+          backgroundColor: "#f0f0f0",
+          padding: "10px",
+          marginTop: "20px",
+          fontSize: "12px",
+          fontFamily: "monospace",
+        }}
+      >
+        <strong>Лог событий:</strong>
+        <ul>
+          {logs.map((log, i) => (
+            <li key={i}>{log}</li>
+          ))}
+        </ul>
+      </div>
       <section>
         <main className={styles.main}>
           <header className={styles.header}>
