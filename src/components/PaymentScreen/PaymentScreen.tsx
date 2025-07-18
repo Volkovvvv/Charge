@@ -488,24 +488,6 @@ const PaymentScreen: React.FC = () => {
   return (
     <Spin spinning={processingPayment}>
       {" "}
-      <div
-        style={{
-          maxHeight: 200,
-          overflowY: "auto",
-          backgroundColor: "#f0f0f0",
-          padding: "10px",
-          marginTop: "20px",
-          fontSize: "12px",
-          fontFamily: "monospace",
-        }}
-      >
-        <strong>Лог событий:</strong>
-        <ul>
-          {logs.map((log, i) => (
-            <li key={i}>{log}</li>
-          ))}
-        </ul>
-      </div>
       <section>
         <main className={styles.main}>
           <header className={styles.header}>
