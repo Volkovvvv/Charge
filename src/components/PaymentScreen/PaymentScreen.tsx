@@ -401,8 +401,17 @@ const PaymentScreen: React.FC = () => {
         addLog("Платеж успешно проведён");
         session.completePayment(ApplePaySession.STATUS_SUCCESS);
         message.success("Платеж прошёл успешно!");
-      } catch (err) {
-        addLog("Ошибка оплаты: " + (err as any).message);
+      } catch (err: any) {
+        if (err.response) {
+          addLog(
+            "Ошибка оплаты: " +
+              err.response.status +
+              " " +
+              JSON.stringify(err.response.data)
+          );
+        } else {
+          addLog("Ошибка оплаты: " + err.message);
+        }
         session.completePayment(ApplePaySession.STATUS_FAILURE);
         message.error("Ошибка оплаты");
       } finally {
