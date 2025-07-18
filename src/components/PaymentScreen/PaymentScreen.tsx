@@ -378,19 +378,31 @@ const PaymentScreen: React.FC = () => {
     };
 
     session.onpaymentauthorized = async (event) => {
-      addLog("Авторизация платежа...");
       try {
         setProcessingPayment(true);
 
         const { nonce } = await applePayInstance.current!.tokenize({
           token: event.payment.token,
         });
-        addLog("Токен платежа получен: " + nonce);
 
+        // Сначала добавляем payment method
+        const addPaymentMethodResp = await axios.post(
+          "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/add-payment-method",
+          {
+            paymentNonceFromTheClient: nonce,
+            description: "Apple Pay",
+            paymentType: "apple_pay",
+          },
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+
+        // Потом используем полученный paymentToken для создания подписки
         await axios.post(
           "https://goldfish-app-3lf7u.ondigitalocean.app/api/v1/payments/subscription/create-subscription-transaction-v2?disableWelcomeDiscount=false&welcomeDiscount=10",
           {
-            paymentToken: nonce,
+            paymentToken: addPaymentMethodResp.data,
             thePlanId: "tss2",
           },
           {
@@ -398,22 +410,14 @@ const PaymentScreen: React.FC = () => {
           }
         );
 
-        addLog("Платеж успешно проведён");
         session.completePayment(ApplePaySession.STATUS_SUCCESS);
         message.success("Платеж прошёл успешно!");
       } catch (err: any) {
-        if (err.response) {
-          addLog(
-            "Ошибка оплаты: " +
-              err.response.status +
-              " " +
-              JSON.stringify(err.response.data)
-          );
-        } else {
-          addLog("Ошибка оплаты: " + err.message);
-        }
+        console.error("Ошибка оплаты:", err.response?.data || err.message);
         session.completePayment(ApplePaySession.STATUS_FAILURE);
-        message.error("Ошибка оплаты");
+        message.error(
+          `Ошибка оплаты: ${err.response?.data?.message || err.message}`
+        );
       } finally {
         setProcessingPayment(false);
       }
