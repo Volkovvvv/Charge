@@ -209,10 +209,6 @@ const PaymentScreen: React.FC = () => {
   const [processingPayment, setProcessingPayment] = useState<boolean>(false);
   const [showCardModal, setShowCardModal] = useState(false);
   const [isFieldsLoading, setIsFieldsLoading] = useState(false);
-  const [logs, setLogs] = useState<string[]>([]);
-  const addLog = (msg: string) => {
-    setLogs((prev) => [...prev, msg]);
-  };
 
   const applePayInstance = useRef<braintree.applePay.ApplePay | null>(null);
   const hostedFieldsInstance = useRef<any | null>(null);
