@@ -344,11 +344,8 @@ const PaymentScreen: React.FC = () => {
 
   const onApplePayClick = () => {
     if (!applePayInstance.current || !accessToken) {
-      addLog("Apple Pay не готов к использованию");
       return message.error("Apple Pay не готов к использованию");
     }
-
-    addLog("Инициализация платежа через Apple Pay...");
 
     const paymentRequest = applePayInstance.current.createPaymentRequest({
       total: { label: "Recharge City", amount: "4.99" },
@@ -358,17 +355,15 @@ const PaymentScreen: React.FC = () => {
     const session = new ApplePaySession(3, paymentRequest);
 
     session.onvalidatemerchant = async (event) => {
-      addLog("Валидация мерчанта...");
       try {
         const merchantSession =
           await applePayInstance.current!.performValidation({
             validationURL: event.validationURL,
             displayName: "Recharge City",
           });
-        addLog("Валидация мерчанта успешна");
+
         session.completeMerchantValidation(merchantSession);
       } catch (err) {
-        addLog("Ошибка валидации мерчанта: " + (err as any).message);
         session.abort();
       }
     };
