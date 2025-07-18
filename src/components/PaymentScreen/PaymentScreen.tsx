@@ -402,6 +402,7 @@ const PaymentScreen: React.FC = () => {
         );
 
         session.completePayment(ApplePaySession.STATUS_SUCCESS);
+        navigate(`/success/${stationId}`);
         message.success("Платеж прошёл успешно!");
       } catch (err: any) {
         console.error("Ошибка оплаты:", err.response?.data || err.message);
@@ -409,6 +410,7 @@ const PaymentScreen: React.FC = () => {
         message.error(
           `Ошибка оплаты: ${err.response?.data?.message || err.message}`
         );
+        navigate("/error");
       } finally {
         setProcessingPayment(false);
       }
