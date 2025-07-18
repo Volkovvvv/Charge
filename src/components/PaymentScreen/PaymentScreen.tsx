@@ -348,7 +348,7 @@ const PaymentScreen: React.FC = () => {
     }
 
     const paymentRequest = applePayInstance.current.createPaymentRequest({
-      total: { label: "Recharge City", amount: "0.00" },
+      total: { label: "Recharge City", amount: "0.05" },
       requiredBillingContactFields: ["postalAddress", "email"],
     });
 
